@@ -1,0 +1,70 @@
+#include <stdbool.h>
+#include <stdlib.h>
+
+#define MAX_SIZE 105
+
+// A clean circular queue structure implemented inside the primary Stack object
+typedef struct {
+    int data[MAX_SIZE];
+    int front;
+    int rear;
+    int size;
+} MyStack;
+
+// Helper queue operation: Enqueue
+void queuePush(MyStack* obj, int val) {
+    obj->data[obj->rear] = val;
+    obj->rear = (obj->rear + 1) % MAX_SIZE;
+    obj->size++;
+}
+
+// Helper queue operation: Dequeue
+int queuePop(MyStack* obj) {
+    int val = obj->data[obj->front];
+    obj->front = (obj->front + 1) % MAX_SIZE;
+    obj->size--;
+    return val;
+}
+
+// Helper queue operation: Front peek
+int queuePeek(MyStack* obj) {
+    return obj->data[obj->front];
+}
+
+MyStack* myStackCreate() {
+    MyStack* stack = (MyStack*)malloc(sizeof(MyStack));
+    stack->front = 0;
+    stack->rear = 0;
+    stack->size = 0;
+    return stack;
+}
+
+void myStackPush(MyStack* obj, int x) {
+    int currentSize = obj->size;
+    
+    // 1. Add the new item to the back of the queue
+    queuePush(obj, x);
+    
+    // 2. Rotate all previous elements to the back to make 'x' the front-most item
+    for (int i = 0; i < currentSize; i++) {
+        queuePush(obj, queuePop(obj));
+    }
+}
+
+int myStackPop(MyStack* obj) {
+    // The top element is already at the front of the queue
+    return queuePop(obj);
+}
+
+int myStackTop(MyStack* obj) {
+    // Return the front element without removing it
+    return queuePeek(obj);
+}
+
+bool myStackEmpty(MyStack* obj) {
+    return obj->size == 0;
+}
+
+void myStackFree(MyStack* obj) {
+    free(obj);
+}
