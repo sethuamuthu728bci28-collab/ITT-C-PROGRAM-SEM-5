@@ -1,0 +1,25 @@
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+    int* data;
+    int size;
+    int capacity;
+} FrontMiddleBackQueue;
+
+FrontMiddleBackQueue* frontMiddleBackQueueCreate() {
+    FrontMiddleBackQueue* obj = (FrontMiddleBackQueue*)malloc(sizeof(FrontMiddleBackQueue));
+    obj->capacity = 2005; // Plentiful buffer for at most 1000 push operations
+    obj->data = (int*)malloc(obj->capacity * sizeof(int));
+    obj->size = 0;
+    return obj;
+}
+
+void frontMiddleBackQueuePushFront(FrontMiddleBackQueue* obj, int val) {
+    // Shift everything right by 1 to make space at index 0
+    for (int i = obj->size; i > 0; i--) {
+        obj->data[i] = obj->data[i - 1];
+    }
+    obj->data[0] = val;
+    obj->size++;
+}
