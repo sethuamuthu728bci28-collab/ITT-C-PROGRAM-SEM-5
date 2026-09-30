@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+int firstUniqChar(char* s) {
+    int len = strlen(s);
+    
+    // Array to hold the frequency count of lowercase English letters
+    int count[26] = {0};
+    
+    // Array queue to store indices of characters sequentially
+    int* queue = (int*)malloc(len * sizeof(int));
+    int front = 0;
+    int rear = 0;
+
+    for (int i = 0; i < len; i++) {
+        int idx = s[i] - 'a';
+        count[idx]++;
+        
+        // Push the current index onto the queue
+        queue[rear++] = i;
+
+        // Clean the queue from the front: remove elements that are no longer unique
+        while (front < rear && count[s[queue[front]] - 'a'] > 1) {
+            front++;
+        }
+    }
+
+    // If front == rear, it means no unique character survived
+    int result = (front < rear) ? queue[front] : -1;
+
+    free(queue);
+    return result;
+}
