@@ -1,0 +1,22 @@
+#include <stdlib.h>
+int maxResult(int* nums, int numsSize, int k) {
+    int* dp = (int*)malloc(numsSize * sizeof(int));
+    int* deque = (int*)malloc(numsSize * sizeof(int));
+    int head = 0, tail = 0;
+    dp[0] = nums[0];
+    deque[tail++] = 0; 
+    for (int i = 1; i < numsSize; i++) {
+        if (deque[head] < i - k) {
+            head++;
+        }
+        dp[i] = nums[i] + dp[deque[head]];
+        while (head < tail && dp[deque[tail - 1]] <= dp[i]) {
+            tail--;
+        }
+        deque[tail++] = i;
+    }
+    int result = dp[numsSize - 1];
+    free(dp);
+    free(deque);
+    return result;
+}
