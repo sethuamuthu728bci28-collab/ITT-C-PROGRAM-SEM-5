@@ -1,0 +1,25 @@
+int countStudents(int* students, int studentsSize, int* sandwiches, int sandwichesSize) {
+    int counts[2] = {0, 0};
+    
+    // Count the preferences of all students
+    for (int i = 0; i < studentsSize; i++) {
+        counts[students[i]]++;
+    }
+    
+    // Iterate through the static stack of sandwiches
+    for (int i = 0; i < sandwichesSize; i++) {
+        int current_sandwich = sandwiches[i];
+        
+        // If no remaining student wants this type of sandwich, the process stalls
+        if (counts[current_sandwich] == 0) {
+            // The number of students left is the total size minus those who already ate
+            return sandwichesSize - i;
+        }
+        
+        // A matching student takes it and leaves
+        counts[current_sandwich]--;
+    }
+    
+    // All students successfully ate
+    return 0;
+}
