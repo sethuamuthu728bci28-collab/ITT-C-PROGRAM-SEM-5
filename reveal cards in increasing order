@@ -1,0 +1,43 @@
+#include <stdlib.h>
+
+// Comparison function for qsort to sort the deck in ascending order
+int compare(const void* a, const void* b) {
+    return (*(int*)a - *(int*)b);
+}
+
+int* deckRevealedIncreasing(int* deck, int deckSize, int* returnSize) {
+    // 1. Sort the deck in ascending order
+    qsort(deck, deckSize, sizeof(int), compare);
+    
+    // 2. Allocate the result array
+    int* result = (int*)malloc(deckSize * sizeof(int));
+    *returnSize = deckSize;
+    
+    // 3. Set up a queue to track target index spaces. 
+    // We allocate 2 * deckSize space because elements move to the back.
+    int* queue = (int*)malloc(2 * deckSize * sizeof(int));
+    int head = 0;
+    int tail = 0;
+    
+    // Initialize queue with indices 0 to deckSize - 1
+    for (int i = 0; i < deckSize; i++) {
+        queue[tail++] = i;
+    }
+    
+    // 4. Simulate the deck revealing sequence using indices
+    for (int i = 0; i < deckSize; i++) {
+        // The current smallest available card goes into the current index slot
+        int currentIdx = queue[head++];
+        result[currentIdx] = deck[i];
+        
+        // If there are indices left in the queue, push the next one to the back
+        if (head < tail) {
+            queue[tail++] = queue[head++];
+        }
+    }
+    
+    // Free the temporary queue memory
+    free(queue);
+    
+    return result;
+}
