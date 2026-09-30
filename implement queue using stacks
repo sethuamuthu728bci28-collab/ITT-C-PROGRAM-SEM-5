@@ -1,0 +1,50 @@
+#include <stdbool.h>
+#include <stdlib.h>
+
+#define MAX_SIZE 105
+
+typedef struct {
+    int inputData[MAX_SIZE];
+    int outputData[MAX_SIZE];
+    int inputTop;
+    int outputTop;
+} MyQueue;
+
+MyQueue* myQueueCreate() {
+    MyQueue* queue = (MyQueue*)malloc(sizeof(MyQueue));
+    queue->inputTop = -1;
+    queue->outputTop = -1;
+    return queue;
+}
+
+void myQueuePush(MyQueue* obj, int x) {
+    // Push directly onto input stack (O(1))
+    obj->inputData[++(obj->inputTop)] = x;
+}
+
+// Internal helper to transfer elements from inputStack to outputStack when needed
+void shiftStacks(MyQueue* obj) {
+    if (obj->outputTop == -1) {
+        while (obj->inputTop != -1) {
+            obj->outputData[++(obj->outputTop)] = obj->inputData[(obj->inputTop)--];
+        }
+    }
+}
+
+int myQueuePop(MyQueue* obj) {
+    shiftStacks(obj);
+    return obj->outputData[(obj->outputTop)--];
+}
+
+int myQueuePeek(MyQueue* obj) {
+    shiftStacks(obj);
+    return obj->outputData[obj->outputTop];
+}
+
+bool myQueueEmpty(MyQueue* obj) {
+    return obj->inputTop == -1 && obj->outputTop == -1;
+}
+
+void myQueueFree(MyQueue* obj) {
+    free(obj);
+}
