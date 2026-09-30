@@ -1,0 +1,34 @@
+#include <string.h>
+#include <stdbool.h
+char* predictPartyVictory(char* senate) {
+    int n = strlen(senate);
+    int r_count = 0, d_count = 0;
+    for (int i = 0; i < n; i++) {
+        if (senate[i] == 'R') r_count++;
+        else d_count++;
+    }
+    int r_bans = 0, d_bans = 0;
+    while (r_count > 0 && d_count > 0) {
+        for (int i = 0; i < n; i++) {
+            if (senate[i] == 'R') {
+                if (r_bans > 0) {
+                    r_bans--;
+                    r_count--;
+                    senate[i] = 'X'; 
+                } else {
+                    d_bans++;
+                }
+            } else if (senate[i] == 'D') {
+                if (d_bans > 0) {
+                    d_bans--;
+                    d_count--;
+                    senate[i] = 'X'; // Mark as eliminated
+                } else {
+                    r_bans++;
+                }
+            }
+        }
+    }
+    
+    return r_count > 0 ? "Radiant" : "Dire";
+}
