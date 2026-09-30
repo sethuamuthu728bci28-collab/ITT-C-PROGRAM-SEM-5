@@ -1,0 +1,38 @@
+#include <stdlib.h>
+typedef struct {
+    int id;
+    int tickets_left;
+} Person;
+
+int timeRequiredToBuy(int* tickets, int ticketsSize, int k) {
+    int total_time = 0;
+    int max_ops = ticketsSize * 101; 
+    Person* queue = (Person*)malloc(max_ops * sizeof(Person));
+    int head = 0;
+    int tail = 0;
+    for (int i = 0; i < ticketsSize; i++) 
+    {
+        queue[tail].id = i;
+        queue[tail].tickets_left = tickets[i];
+        tail++;
+    }
+while(head <tail)
+{
+    Person current = queue[head];
+    head++;
+    current.tickets_left--;
+    total_time++;
+    if(current.id == k && current.tickets_left ==0)
+    {
+        free(queue);
+        return total_time;
+    }
+    if (current.tickets_left > 0)
+    {
+        queue[tail] = current;
+        tail++;
+    }
+}
+free(queue);
+return total_time;
+}
