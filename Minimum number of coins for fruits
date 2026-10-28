@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+int minimumCoins(int* prices, int pricesSize) {
+    int* dp = (int*)malloc((pricesSize + 2) * sizeof(int));
+    if (dp == NULL) return 0; 
+    dp[pricesSize + 1] = 0;
+    for (int i = pricesSize; i >= 1; i--) {
+        if (i + i >= pricesSize) {
+            dp[i] = prices[i - 1];
+        } else { 
+            int min_future = dp[i + 1];
+            for (int j = i + 1; j <= i + i + 1; j++) {
+                min_future = MIN(min_future, dp[j]);
+            }
+            dp[i] = prices[i - 1] + min_future;
+        } 
+    }
+    int result = dp[1];
+    free(dp);
+    return result;
+}
